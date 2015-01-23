@@ -1,3 +1,15 @@
+Phalcon + Wordpress
+
+This website incorporates CRUD features & GUI of WordPress alongside the speed and efficiency of Phalcon PHP Framework.
+
+Issues:
+Multiple instances of same function
+Large block of commented code
+Limited Comments
+
+
+
+
 Phalcon Tutorial
 ================
 
