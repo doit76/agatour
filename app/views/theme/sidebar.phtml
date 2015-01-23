@@ -1,0 +1,80 @@
+<style>
+    a.heading-sidebar {
+        font-weight: 700;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-bottom: 2px;
+        display: block; }
+    
+    hr.article-sidebar {
+        margin: 2px 0 ; }
+</style>
+
+<?php $latest_posts = Post::latest(); ?>
+
+<div class="uk-grid uk-margin-bottom">
+    <div class="uk-width-1-1">
+        <h3>Latest News</h3>
+        {% for post in latest_posts %}
+            <a class="heading-sidebar" href="{{ post.link }}">{{ post.post_title }}</a>
+            <hr class="article-sidebar">
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    table.tournament {
+        width: 100%; }
+    
+</style>
+
+
+<?php $latest_tournament = Tournament::latest(); ?>
+<div class="uk-grid uk-margin-bottom">
+    <div class="uk-width-1-1">
+    <table class="uk-table tournament">
+            {% if(latest_tournament.scoring == 'stroke') %}
+
+        <thead>
+            <tr>
+                <td colspan="3"><a style="color: #fff;" href="/tournament/{{ latest_tournament.post_name }}">{{ latest_tournament.post_title }}</a></td>
+            </tr>
+            <tr>
+                <td rowspan="2">Pos</td>
+                <td rowspan="2" class="name">Player Name</td>
+                <td rowspan="2">Adjusted</td>
+            </tr>
+        </thead>
+
+            {% for round in latest_tournament.get_rounds() %}
+            <tr>
+                <td>{{ round.position }}</td>
+                <td>{{ round.player().post_title }}</td>
+                <td>{{ round.total }} ({{ round.adjusted }})</td>                
+            </tr>        
+            {% endfor %}
+            {% elseif(latest_tournament.scoring == 'match') %}
+                <thead>
+                    <tr>
+                        <td colspan="3"><a style="color: #fff;" href="/tournament/{{ latest_tournament.post_name }}">{{ latest_tournament.post_title }}</a></td>
+                    </tr>
+                </thead>
+        
+                {% for name, matchup in latest_tournament.matchplay() %}
+                 <tr>
+                    <td>
+                        {{ latest_tournament.players()[name][1] }}
+                    </td>
+                    <td>
+                        {{ latest_tournament.winner()[name] }}<br>
+                    </td>                
+                    <td>
+                        {{ latest_tournament.players()[name][2] }}
+                    </td>
+                </tr>              
+                {% endfor %}
+            {% endif %}
+    </table>
+    </div>
+</div>

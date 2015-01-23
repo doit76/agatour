@@ -1,0 +1,21 @@
+<table class="uk-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Winner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tournament in tournaments %}
+            <tr>   
+                <td>{{ tournament.date }}</td>
+                <td>
+                    <a href="/tournament/{{ tournament.post_name }}">{{ tournament.post_title }}</a><br>
+                    {{ tournament.get_course().post_title }}
+                </td>
+                <td>{{ tournament.winner }} ({{ tournament.score }})</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

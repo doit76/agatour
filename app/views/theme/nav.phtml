@@ -1,0 +1,66 @@
+<style>
+	nav.uk-navbar {
+		background: #ffffff; }
+	
+	nav.uk-navbar ul.uk-navbar-nav li a {
+		font-family:'Roboto Condensed',sans-serif;
+		font-weight: 700;
+		font-size: 18px;
+		text-transform: uppercase;
+		color: #104f91; }
+	
+	nav.uk-navbar ul.uk-navbar-nav li a:hover, 
+	nav.uk-navbar ul.uk-navbar-nav li.uk-active a:hover,
+	nav.uk-navbar ul.uk-navbar-nav li.uk-active a {
+		background: #d8d8d8; }
+		
+</style>
+
+        {% set uri=router.getRewriteUri() %}
+        <?php
+          $uri = explode("/", $uri);
+        ?>
+        
+<nav class="uk-navbar">
+    <ul class="uk-navbar-nav uk-hidden-small">
+        <?php $navigation = Navigation::get(); ?>
+        
+        {% for item in navigation %}
+            {% if item.parent is empty %}
+			<li class="{{ ((item.has_children()) ? 'uk-parent' : '' ) }} {{ ((uri[1] == item.post_name) ? 'uk-active' : '' ) }}" {{ ((item.has_children()) ? 'data-uk-dropdown' : '' ) }}><a href="{{ item.url }}">{{ item.post_name }}</a>
+                {% if item.has_children() %}
+                    <div class="uk-dropdown uk-dropdown-navbar">
+                        <ul class="uk-nav uk-nav-navbar">
+                            {% for child in item.get_children() %}
+                                <li><a href="{{ child.url }}">{{ child.post_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+    </ul>
+    <a class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas="{target:'#my-id'}"></a>
+</nav>
+
+<div id="my-id" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>
+        {% for item in navigation %}
+			<li class="{{ ((item.has_children()) ? 'uk-parent' : '' ) }} {{ ((uri[1] == item.post_name) ? 'uk-active' : '' ) }}" {{ ((item.has_children()) ? 'data-uk-dropdown' : '' ) }}><a href="{{ item.url }}">{{ item.post_name }}</a>
+                {% if item.has_children() %}
+                    <div class="uk-dropdown uk-dropdown-navbar">
+                        <ul class="uk-nav uk-nav-navbar">
+                            {% for child in item.get_children() %}
+                                <li><a href="{{ child.url }}">{{ child.post_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+        {% endfor %}
+             
+        </ul>
+    </div>
+</div>

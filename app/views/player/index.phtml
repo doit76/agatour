@@ -1,0 +1,32 @@
+<style>
+    div.player {
+        padding: 10px 20px; }
+  
+    span.name a {
+        text-decoration: none;
+        text-transform: uppercase;
+        display: block;
+        color: #005391;
+        font-weight: 400; }
+  
+    span.country {
+        font-size: 12px;
+        text-transform: uppercase;
+        display: block;
+        color: #a0a0a0; }
+  
+    span.country img {
+        vertical-align: middle;
+        width: 20px; }
+  
+</style>
+
+    <h3>Players</h3>
+    <div class="uk-grid">
+      {% for player in players %}
+        <div class="uk-width-1-4 player">
+          <span class="name">{{ link_to(['for': 'get-player', 'slug': player.post_name], player.post_title) }}</span>
+          <span class="country">{{ player.flag }} {{ player.country }}</span>
+        </div>
+      {% endfor %}
+    </div>

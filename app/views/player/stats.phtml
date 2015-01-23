@@ -1,0 +1,110 @@
+        <h3>Stats</h3>
+        <p>Courses Played: {{ player.courses_played }}</p> 
+        <p>Top Scores: {{ player.handicap()['top8'] }}</p> 
+        <p>All Time Birdies {{ made['alltime']['alltime_birdies'] }}</p>
+        <p>All Time Pars {{ made['alltime']['alltime_pars'] }}</p>
+        <p>Last 6 months</p>
+        <p>Holes Per Birdie {{ made['half']['alltime_holes']/made['half']['alltime_birdies'] }}</p>
+        <p>Holes Per Par {{ made['half']['alltime_holes']/made['half']['alltime_pars'] }}</p>
+        <p>Holes Per Meltdown {{ made['half']['alltime_holes']/made['half']['alltime_meltdowns'] }}</p>
+        <style>
+            table.made tr td { text-align: middle }
+            
+        </style>
+        
+        {% set time = ['Last Month': 'month', 'Last 6 Months': 'half', 'All Time': 'alltime'] %}
+        {% set status = ['eagle', 'birdie', 'par', 'bogey', 'double-bogey', 'threeplus'] %}
+        {% set distances = [100,200,300,400,500,600] %}
+            <h4>Home & Away</h4>
+            <table class="uk-table made">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>< 10</td>
+                        <td>< 25</td>
+                        <td>< 50</td>
+                        <td>< 75</td>
+                        <td>75+</td>
+                    </tr>
+                </thead>
+                    <tr>
+                        <td></td>
+                        <td>{{ distance['distance_average_0'] }}</td>
+                        <td>{{ distance['distance_average_25'] }}</td>
+                        <td>{{ distance['distance_average_50'] }}</td>
+                        <td>{{ distance['distance_average_75'] }}</td>
+                        <td>{{ distance['distance_average_100'] }}</td>
+                    </tr>
+            </table>
+        
+            <table class="uk-table made">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>N</td>
+                        <td>E</td>
+                        <td>S</td>
+                        <td>W</td>
+                    </tr>
+                </thead>
+                    <tr>
+                        <td></td>
+                        <td>{{ region['region_average_N'] }}</td>
+                        <td>{{ region['region_average_E'] }}</td>
+                        <td>{{ region['region_average_S'] }}</td>
+                        <td>{{ region['region_average_W'] }}</td>
+                    </tr>
+            </table>
+        
+        {% for timeframe, key in time %}
+            <h4>{{ timeframe }}</h4>
+            <table class="uk-table made">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Eagle</td>
+                        <td>Birdie</td>
+                        <td>Par</td>
+                        <td>Bogey</td>
+                        <td>Double Bogey</td>
+                        <td>3+</td>
+                    </tr>
+                </thead>
+                {% for par in 3..5 %}
+                    <tr>
+                        <td>Par {{ par }}</td>
+                        {% for score in status %}
+                            <td>{{ made['par_percentage_'~par][key][score] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+        
+        
+        {% for timeframe, key in time %}
+            <h4>{{ timeframe }}</h4>
+            <table class="uk-table made">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>0-150</td>
+                        <td>151-250</td>
+                        <td>251-350</td>
+                        <td>351-450</td>
+                        <td>451-550</td>
+                        <td>551-650</td>
+                    </tr>
+                </thead>
+                {% for par in 3..5 %}
+                    <tr>
+                        <td>Par {{ par }}</td>
+                        {% for distance in distances %}
+                            <td>{{ made['distance_average_'~distance~'_'~par][key] }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+        

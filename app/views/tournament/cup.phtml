@@ -1,0 +1,139 @@
+    <style>
+        table.tournament tr td.team { width: 40% }
+        table.tournament tr td.score { width: 10% }
+
+    </style>
+    {% set team_1 = tournament.get_team(1) %}
+    {% set team_2 = tournament.get_team(2) %}
+    {% set results = tournament.get_matchup_result() %}
+    <table class="tournament">
+        <thead>
+            <tr>
+                <td class="team">{{ team_1['name'] }}</td>
+                <td class="score"></td>
+                <td class="score"></td>
+                <td class="team">{{ team_2['name'] }}</td>
+            </tr>
+        </thead>
+            <tr>
+                <td>
+                    {% for player in team_1['players'] %}
+                        {{ player }}<br>
+                    {% endfor %}
+                </td>
+                <td>{{ results['team_1'] }}</td>
+                <td>{{ results['team_2'] }}</td>
+                <td>
+                    {% for player in team_2['players'] %}
+                        {{ player }}<br>
+                    {% endfor %}                
+                </td>
+            </tr>
+
+    </table>
+
+    <br>
+    <br>
+
+    <table class="tournament">
+        <thead>
+            <tr>
+                <td colspan="3">Head to Head</td>
+            </tr>
+        </thead>
+            {% for matchup in 1..4 %}
+            <tr>
+                <td>
+                    {{ team_1['headtohead_'~matchup] }}
+                </td>
+                <td>
+                    {{ results['headtohead_'~matchup]['winner']['result'] }}<br>
+                    <a data-uk-toggle="{target:'#fourball{{ matchup }}'}">Details</a>
+                </td>                <td>
+                    {{ team_2['headtohead_'~matchup] }}
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+
+    <br>
+    <br>
+
+    <style>
+        
+        table.scorecard tr td.winner span {
+            color: #fff;
+            display: block;
+            width: 25px;
+            height: 25px;
+        }
+
+        table.scorecard tr.team1 td.winner span {
+            background: {{ tournament.get_team(1, 'colour') }}; }
+        
+        table.scorecard tr.team2 td.winner span {
+            background: {{ tournament.get_team(2, 'colour') }}; }
+ 
+        table.scorecard tr td.leader span {
+            display: block;
+            width: 25px;
+            height: 10px; }
+        
+        table.scorecard tr td.team1 span {
+            background: {{ tournament.get_team(1, 'colour') }}; }
+        
+        table.scorecard tr td.team2 span {
+            background: {{ tournament.get_team(2, 'colour') }}; }
+ 
+        table.scorecard tr td.current_score {
+            font-size: 10px; }
+   
+    </style>
+
+    <table class="tournament">
+        <thead>
+            <tr>
+                <td colspan="3">Fourball</td>
+            </tr>
+        </thead>
+            {% for matchup in 1..2 %}
+            <tr>
+                <td>
+                    {{ team_1['fourball_'~matchup] }}
+                </td>
+                <td>
+                    {{ results['fourball_'~matchup]['winner']['result'] }}<br>
+                    <a data-uk-toggle="{target:'#fourball{{ matchup }}'}">Details</a>
+                </td>
+                <td>
+                    {{ team_2['fourball_'~matchup] }}
+                </td>
+            </tr>
+
+            {% endfor %}
+    </table>
+
+    <br>
+    <br>
+
+    <table class="tournament">
+        <thead>
+            <tr>
+                <td colspan="3">Foursomes</td>
+            </tr>
+        </thead>
+            {% for matchup in 1..2 %}
+            <tr>
+                <td>
+                    {{ team_1['foursomes_'~matchup] }}
+                </td>
+                <td>
+                    {{ results['foursomes_'~matchup]['winner']['result'] }}<br>
+                    <a data-uk-toggle="{target:'#foursomes{{ matchup }}'}">Details</a>
+                </td>
+                <td>
+                    {{ team_2['foursomes_'~matchup] }}
+                </td>
+            </tr>
+            {% endfor %}
+    </table>

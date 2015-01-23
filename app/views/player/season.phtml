@@ -1,0 +1,66 @@
+<h3>AGA Tour {{ season.year }} Summary</h3>
+
+<style>
+    table.standings tr td {
+        vertical-align: middle;
+        text-align: center; }
+ 
+    table.standings tr td.tournament {
+        vertical-align: middle;
+        text-align: left; }
+    
+</style>
+
+<table class="uk-table standings">
+    <thead>
+        <tr>
+            <td rowspan="2">Events Played</td>
+            <td rowspan="2">Wins</td>
+            <td rowspan="2">Top 2</td>
+            <td rowspan="2">Points</td>
+            <td colspan="2">AGA Cup</td>
+        </tr>
+        <tr>
+            <td>Points</td>
+            <td>Rank</td>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>   
+                <td>{{ season.events }}</td>
+                <td>{{ season.wins }}</td>
+                <td>{{ season.top2 }}</td>
+                <td>{{ season.points }}</td>
+                <td>{{ season.aga_points }}</td>
+                <td>{{ season.aga_rank }}</td>
+            </tr>
+    </tbody>
+</table>
+
+
+<table class="uk-table standings">
+    <thead>
+        <tr>
+            <td>Date</td>
+            <td>Position</td>
+            <td class="tournament">Tournament</td>
+            <td>Total</td>
+            <td>Differential</td>
+            <td>Adjusted</td>
+            <td>Points</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for round in season.rounds %}
+            <tr>   
+                <td>{{ round.tournament().date }}</td>
+                <td>{{ round.position }}</td>
+                <td class="tournament">{{ round.tournament().post_title }}</td>
+                <td>{{ round.total }}</td>
+                <td>{{ round.differential }}</td>
+                <td>{{ round.official }}</td>
+                <td>{{ round.points }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

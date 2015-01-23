@@ -1,0 +1,65 @@
+<style>
+        table.scorecard tr td {
+            text-align: center;
+        }
+        
+        table.scorecard tr.team1 td.winner {
+            background: {{ tournament.get_team(1)['colour'] }}; 
+            color: #fff;}
+        
+        table.scorecard tr.team2 td.winner {
+            background: {{ tournament.get_team(2)['colour'] }};
+            color: #fff;}
+
+</style>
+
+
+{% for name, matchup in tournament.matchplay() %}
+
+    <table class="tournament">
+        <thead>
+            <tr>
+                <td colspan="3">{{ name }}</td>
+            </tr>
+        </thead>
+            <tr>
+                <td>
+                    {{ tournament.players()[name][1] }}
+                </td>
+                <td>
+                    {{ tournament.winner()[name] }}<br>
+                    <a data-uk-toggle="{target:'#scorecard{{name}}'}">Details</a>
+
+                </td>                
+                <td>
+                    {{ tournament.players()[name][2] }}
+                </td>
+            </tr>
+            <tr>
+                    <table class="uk-table scorecard uk-hidden" id="scorecard{{name}}">
+                        <tr>
+                            <td></td>
+                            {% for hole in 1..18 %}
+                                <td>{{ hole }}</td>
+                            {% endfor %}    
+                        </tr>
+                        {% set i = 1 %}
+                        {% for player, round in matchup %}
+                            <tr class="team{{i}}">
+                                <td>{{ player }}</td>
+                                {% for hole, score in round %}
+                                    <td class="{% if(player == tournament.progress()[name][hole+1]) %}winner{% endif %}">{% if (hole+ 1 <= tournament.finished()[name]) %}{{ score }}{% endif %}</td>
+                                {% endfor %}
+                            </tr>
+                            {% set i = 2 %}
+                        {% endfor %}
+                        <tr>
+                            <td></td>
+                            {% for hole in 1..18 %}
+                                <td>{{ tournament.leader()[name][hole] }}</td>
+                            {% endfor %}    
+                        </tr>
+                    </table>
+            </tr>
+    </table>
+{% endfor %}

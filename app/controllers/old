@@ -1,0 +1,330 @@
+                       /*
+            $players = Player::all();
+            
+            foreach($players as $player){
+                
+                    $scores = array('eagle', 'birdie', 'par', 'bogey', 'double-bogey', 'threeplus');
+                    $times = array('month', 'half', 'alltime');
+                    $course_array = array();
+                
+                    for($i = 3; $i <= 5; $i++){
+                        foreach($scores as $score){
+                            foreach($times as $time){
+                                $made['par_'.$i][$time][$score] = 0;
+                                $made['par_total_'.$i][$time] = 0;
+                            }
+                        }       
+                    }
+                
+                    for($i = 100; $i <= 600; $i+=100){
+                        for($par = 3; $par <= 5; $par++){
+                            foreach($times as $time){
+                                $made['distance_'.$i.'_'.$par][$time][] = array();
+                            }
+                        }
+                    }
+                
+                    for($i = 0; $i <= 100; $i+=25){
+                        $home['distance_'.$i] = array();
+                    }
+                
+                    $loc['region_N'] = array();
+                    $loc['region_E'] = array();
+                    $loc['region_S'] = array();
+                    $loc['region_W'] = array();
+                
+                    foreach($player->rounds_meta() as $round){
+                        
+                        if($round->holes_played == 18){
+                            $current_round = Round::single($round->id);
+                            $course_array[] = $current_round->tournament()->get_course()->ID;
+
+                            $distance = $current_round->tournament()->get_course()->distance();
+                            $region = $current_round->tournament()->get_course()->angle();
+
+                            //print_r($region);
+
+                            if($distance <= 10){
+                                $home['distance_0'][] = $round->total;
+                            }elseif($distance <= 25){
+                                $home['distance_25'][] = $round->total;
+                            }elseif($distance <= 50){
+                                $home['distance_50'][] = $round->total;
+                            }elseif($distance <= 75){
+                                $home['distance_75'][] = $round->total;
+                            }elseif($distance > 75){
+                                $home['distance_100'][] = $round->total;
+                            }
+
+                            $loc['region_'.$region][] = $round->total; 
+
+
+                            for($hole = 1; $hole <= 18; $hole++){
+                                $hole_score = $current_round->score('array')[$hole - 1];
+
+                                if($hole_score && $hole_score > 0){
+                                    $par = $current_round->tournament()->get_course()->scorecard('par', $hole);
+
+                                    $distance = $current_round->tournament()->get_course()->scorecard('distance', $hole);
+
+                                    $status = $hole_score - $par;
+
+                                    $times_count = array();
+
+                                    if(date('Y-m-d', strtotime('-1 month')) <= $round->date){
+                                        $times_count[] = 'month';   
+                                    }
+
+                                    if(date('Y-m-d', strtotime('-6 months')) <= $round->date){
+                                        $times_count[] = 'half';   
+                                    }     
+                                        $times_count[] = 'alltime';   
+
+
+                                    foreach($times_count as $time){
+                                        if($distance > 0 && $distance <= 150){
+                                            $made['distance_100_'.$par][$time][] = $hole_score;     
+                                        }elseif($distance > 150 && $distance <= 250){
+                                            $made['distance_200_'.$par][$time][] = $hole_score;    
+                                        }elseif($distance > 250 && $distance <= 350){
+                                            $made['distance_300_'.$par][$time][] = $hole_score;    
+                                        }elseif($distance > 350 && $distance <= 450){
+                                            $made['distance_400_'.$par][$time][] = $hole_score;   
+                                        }elseif($distance > 450 && $distance <= 550){
+                                            $made['distance_500_'.$par][$time][] = $hole_score;    
+                                        }elseif($distance > 550 && $distance <= 650){
+                                            $made['distance_600_'.$par][$time][] = $hole_score;     
+                                        }
+
+                                        if($status == -2){
+                                            $made['par_'.$par][$time]['eagle']++; 
+                                            $made['par_total_'.$par][$time]++;
+                                        }elseif($status == -1){
+                                            $made['par_'.$par][$time]['birdie']++;  
+                                            $made['par_total_'.$par][$time]++;
+                                        }elseif($status == 0){
+                                            $made['par_'.$par][$time]['par']++;  
+                                            $made['par_total_'.$par][$time]++;
+                                        }elseif($status == 1){
+                                            $made['par_'.$par][$time]['bogey']++;  
+                                            $made['par_total_'.$par][$time]++;
+                                        }elseif($status == 2){
+                                            $made['par_'.$par][$time]['double-bogey']++;  
+                                            $made['par_total_'.$par][$time]++;
+                                        }elseif($status >= 3){
+                                            $made['par_'.$par][$time]['threeplus']++;  
+                                            $made['par_total_'.$par][$time]++;
+                                        }  
+                                    }
+                                }
+                            }
+                        }
+                    }
+                        for($i = 3; $i <= 5; $i++){
+                            foreach($scores as $score){
+                                foreach($times as $time){
+                                    $made_count = $made['par_'.$i][$time][$score];
+                                    $total_count = $made['par_total_'.$i][$time];
+                                    if($total_count>0){
+                                        $made['par_percentage_'.$i][$time][$score] = round( ($made_count/$total_count) * 100, 1);
+                                    }else{
+                                        $made['par_percentage_'.$i][$time][$score] = '-';
+                                    }
+                                }
+                            }       
+                        }
+
+                        for($i = 100; $i <= 600; $i+=100){
+                            for($par = 3; $par <= 5; $par++){
+                                foreach($times as $time){
+                                    $scoring_array = array_filter($made['distance_'.$i.'_'.$par][$time]);
+                                    if($scoring_array != NULL){
+                                        $made['distance_average_'.$i.'_'.$par][$time] = round(array_sum($scoring_array) / count($scoring_array), 1);
+                                    }else{
+                                     $made['distance_average_'.$i.'_'.$par][$time] = '-';
+                                    }
+                                }
+                            }
+                        }
+
+
+                        $courses_played = count(array_unique($course_array));
+
+
+                        for($i = 0; $i <= 100; $i+=25){
+                            if(count($home['distance_'.$i]) > 0){
+                                $home['distance_average_'.$i] = round((array_sum($home['distance_'.$i]) / count($home['distance_'.$i])), 1);                
+                            }else{
+                                $home['distance_average_'.$i] = '-';
+                            }
+                        }
+
+                        $regions = array('N', 'E', 'S', 'W');
+
+                        foreach($regions as $region_1){
+
+                            //print_r($loc['region_'.$region_1]);
+
+                            if(count($loc['region_'.$region_1]) > 0){
+                            $loc['region_average_'.$region_1] = round((array_sum($loc['region_'.$region_1]) / count($loc['region_'.$region_1])), 1);
+                            }else{
+                                $loc['region_average_'.$region_1] = '-';
+                            }
+                        }   
+
+                        update_post_meta($player->ID, 'region_stats', $loc);
+                        update_post_meta($player->ID, 'distance_stats', $home);
+                        update_post_meta($player->ID, 'courses_played', $courses_played);
+                        update_post_meta($player->ID, 'made_stats', $made);
+                        update_post_meta($player->ID, 'stats_updated', time()); 
+                    echo $player->post_title . '<br>';
+            }
+            */
+            
+            
+            /*
+            $tournaments = Tournament::all();
+            foreach($tournaments as $tournament){
+                                
+                if($tournament->scoring == 'stroke'){
+                    echo $tournament->post_title . '<br><br>';
+                    
+                    if($tournament->holes_played == 18){
+                        echo 'Average Handicap - ' . $tournament->average_handicap() . '<br><br>';
+                        $handicap_avg = $tournament->average_handicap();
+                        $par = $tournament->get_course()->scorecard("par");
+                        
+                    }else{
+                        $par = $tournament->get_course()->scorecard("par", "front");
+                         $handicap_avg = 0;
+                   }
+                    
+                    
+                    
+                    if($tournament->points == 2500){
+                        
+                        $points_array = array(2500,2000,1500,1000,750,500,250,125,100,90,80,70);
+                            
+                    }elseif($tournament->points == 2000){
+                        
+                        $points_array = array(2000,1200,740,540,440,400,360,340,320,300,280,260,240);
+                            
+                    }elseif($tournament->points == 1000){
+                        
+                        $points_array = array(1000,600,380,270,220,200,180, 170,160,150,140,130,120);
+                            
+                    }elseif($tournament->points == 500){
+                        
+                        $points_array = array(500,300,190,135,110,100,90, 85,80,75,70,65,60);
+                            
+                    }elseif($tournament->points == 50){
+                        
+                        $points_array = array(50,30,19,13,11,10,9, 8,7,6,5,4,3);
+                            
+                    }else{
+                        $points_array = array_fill(0,13,0);                        
+                    }
+                             
+                    $tournament_rounds = array();
+                    
+                    foreach($tournament->get_rounds() as $round){
+                        
+                        $current_p = Player::single_by_id($round->player_id);
+                        if($tournament->holes_played == 18){
+
+                        
+            $scratch = $current_round->tournament()->get_course()->scratch;
+            $slope = $current_round->tournament()->get_course()->slope;
+                            
+                            
+                update_post_meta($round->ID, 'differential', ((($round->strokes - $scratch) * 113) / $slope));
+                            
+               if($tournament->full_date >= '2014-12-25'){
+                   
+                   
+      $handicap_diff = $current_p->handicap($tournament->full_date)['handicap'];             
+                   
+                   
+               }
+                            
+                            
+                            elseif($current_p->adjustment > $tournament->full_date)
+                            {
+                        $handicap_diff = $current_p->handicap($tournament->full_date)['handicap'] - $handicap_avg;
+                            
+                            if($handicap_diff < 0){
+                                $handicap_diff = 0;
+                            }                    
+                    }
+                            
+                            else{
+                        $handicap_diff = 0;
+                   }
+                    
+                        }
+                        
+                        
+                        
+                        $total = sprintf("%+d", $round->strokes - $par);
+                        $adjusted = sprintf("%+d", $total - $handicap_diff);
+                        
+                        update_post_meta($round->ID, 'total', $total);
+                        update_post_meta($round->ID, 'adjusted', $adjusted);
+                        update_post_meta($round->ID, 'holes_played', $tournament->holes_played);
+                        update_post_meta($round->ID, 'date', $tournament->full_date);
+                                                    
+                        
+                        $tournament_rounds[$round->ID] = $adjusted;
+                    }
+                    
+                asort($tournament_rounds);
+                $tie = array_count_values($tournament_rounds);
+                $winner = array();
+                $last = 999999;
+                $position = 0;
+                    
+                    
+                    foreach($tournament_rounds as $round_id => $score)
+                { 
+                            
+                        
+                    $current_round = Round::single($round_id);    
+                        
+                     if($position == 0)
+                    {
+                        $position++;
+                    }elseif($score != $last){
+                        $position += $last_tie;
+                    }
+
+                    if($position == 1){
+                        $current_player = Player::single_by_id($current_round->player_id);
+                        $winner[] = $current_player->post_title;
+                        update_post_meta($tournament->ID, 'score', $score);
+                    }
+                        
+              $points = 0;
+            for($start = $position;$start < $position +  $tie[$score]; $start++){
+                
+                $points += $points_array[$start - 1];
+                
+            }
+                        
+                        
+                 $points = ceil($points/ $tie[$score]);    
+                        
+                    $last = $score;
+                    $last_tie = $tie[$score];
+                     update_post_meta($current_round->ID, 'position', $position);
+                     update_post_meta($current_round->ID, 'points', $points);
+                        
+                        
+                        echo $position  . '('. $points .'). ' . $current_round->scorecard . ' - ' . $current_round->total . ' adjusted to ' . $current_round->adjusted . '<br>';   
+                       
+                }
+                    echo '<br><br>';
+                    update_post_meta($tournament->ID, 'winner', join(', ', $winner));                
+            }               
+
+            }
+            */

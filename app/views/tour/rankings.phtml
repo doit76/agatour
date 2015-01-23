@@ -1,0 +1,43 @@
+<h3>Rankings</h3>
+
+<style>
+    table.standings tr th {
+        vertical-align: middle;
+        text-align: center; }
+
+    table.standings tr td {
+        vertical-align: middle;
+        text-align: center; }
+    
+
+    table.standings tr td.flag {
+        text-align: center;
+        width: 25px; }
+</style>
+
+<table class="uk-table standings">
+    <thead>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Events Played</td>
+            <td>Wins</td>
+            <td>Top 2</td>
+            <td>Points</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for players in season.get_rankings() %}
+            {% if players.points > 0 %}
+            <tr>   
+                <td>{{ players.position }}</td>
+                <td>{{ players.name }}</td>
+                <td>{{ players.events }}</td>
+                <td>{{ players.wins }}</td>
+                <td>{{ players.top2 }}</td>
+                <td>{{ players.points }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

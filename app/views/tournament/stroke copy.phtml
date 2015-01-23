@@ -1,0 +1,67 @@
+<table class="uk-table tournament">
+    <thead>
+        <tr>
+            <td rowspan="2">Pos</td>
+            <td rowspan="2" class="flag">Country</td>
+            <td rowspan="2" class="name">Player Name</td>
+            <td rowspan="2">Total</td>
+            <td rowspan="2">Front 9</td>
+            <td rowspan="2">Back 9</td>
+            <td rowspan="2">Strokes</td>
+            <td rowspan="2">Adjusted</td>
+            {% if tournament.type != 'practice' %}
+                <td colspan="2">Championship</td>
+            {% endif %}
+            <td rowspan="2"></td>
+        </tr>
+        <tr>
+            {% if tournament.type != 'practice' %}
+                <td>Points</td>
+                <td>Change</td>
+            {% endif %}
+        </tr>
+    </thead>
+    
+    {% for round in tournament.get_rounds() %}
+        <tr>
+            <td>{{ round.position }}</td>
+            <td>{{ round.player().flag }}</td>
+            <td class="name">{{ round.player().post_title }}</td>
+            <td>{{ round.total }}</td>
+            <td>{{ round.score('front') }}</td>
+            <td>{{ round.score('back') }}</td>
+            <td>{{ round.strokes }}</td>
+            <td>{{ round.adjusted }}</td>
+             
+            {% if tournament.type != 'practice' %}
+                <td>{{ round.points }}</td>
+                <td></td>
+            {% endif %}
+            
+            <td><span class="uk-icon-dot-circle-o" data-uk-toggle="{target:'#round{{ round.ID }}'}"></span></td>
+        </tr>        
+
+        <tr class="uk-hidden" id="round{{ round.ID }}">
+            <td style="padding: 0;" colspan="11">
+                <table class="uk-table scorecard">
+                    <tr>
+                        <td>Hole</td>
+                        {% for hole in 1..round.score('holes') %}
+
+                            <td class="hole">{{ hole }}</td>
+                            {% if hole is 9 %}
+                                <td>OUT</td>
+                            {% endif %}
+                            {% if hole is 18 %}
+                                <td>IN</td>
+                            {% endif %}
+                            {% if hole is 18 or round.score('holes') is 9 %}
+                                <td>TOT</td>
+                            {% endif %}                    
+                        {% endfor %}               
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>

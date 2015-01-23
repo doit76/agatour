@@ -1,0 +1,19 @@
+<style>
+    div.image img { width: 100%; }
+</style>
+{% for post in page.items %}
+<div class="uk-grid">
+    {% if(post.has_image()) %}
+        <div class="uk-width-1-4 image">{{ post.photo }}</div>
+        <div class="uk-width-3-4">
+            {{ partial(post.page_format()) }}
+        </div>
+    {% else %}
+        <div class="uk-width-1-1">
+            {{ partial(post.page_format()) }}
+        </div>   
+    {% endif %}
+</div>
+<hr class="article">
+{% endfor %}
+{{ partial("blog/pagination") }}

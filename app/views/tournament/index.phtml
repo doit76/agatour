@@ -1,0 +1,18 @@
+<h3>{{ year }} {{ type|capitalize }} Schedule</h3>
+
+<h4>Select Year</h4>
+{% for prev_year in 2013..date('Y')+1 %}
+    <a class="{{ ((prev_year == year) ? 'active ' : '') }}button" href="/schedule/{{ type }}/{{ prev_year }}">{{ prev_year }}</a>
+{% endfor %}
+
+<h4>Select Schedule Type</h4>
+    <a class="{{ ((type == 'tour') ? 'active ' : '') }}button" href="/schedule/tour/{{ year }}">Tour</a> 
+    <a class="{{ ((type == 'cup') ? 'active ' : '') }}button" href="/schedule/cup/{{ year }}">Cup</a> 
+    <a class="{{ ((type == 'exhibition') ? 'active ' : '') }}button" href="/schedule/exhibition/{{ year }}">Exhibition</a> 
+    <a class="{{ ((type == 'practice') ? 'active ' : '') }}button" href="/schedule/practice/{{ year }}">Practice</a>
+
+{% if type == 'tour' OR type == 'exhibition' %}
+    {{ partial("tournament/points") }}
+{% else %}
+    {{ partial("tournament/other") }}
+{% endif %}

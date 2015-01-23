@@ -1,0 +1,6 @@
+{% for player in players %}
+    <a href="/player/{{ player.post_name }}">{{ player.post_title }}</a><br>
+    <?php foreach($player->getRounds() as $round):
+            echo $round->score . '<br>';
+        endforeach; ?>
+{% endfor %}

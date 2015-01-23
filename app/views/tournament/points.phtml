@@ -1,0 +1,31 @@
+<table class="uk-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Winner</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tournament in tournaments %}
+                    <?php 
+/*
+    if($tournament->type != 'cup' || $tournament->scoring != 'match'):
+
+        $tournament->update_tournament(); 
+
+        endif; */
+        ?>  
+            <tr>   
+                <td>{{ tournament.date }}</td>
+                <td>
+                    <a href="/tournament/{{ tournament.post_name }}">{{ tournament.post_title }}</a><br>
+                    {{ tournament.get_course().post_title }}
+                </td>
+                <td>{{ tournament.winner }} ({{ tournament.score }})</td>
+                <td>{{ tournament.points }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

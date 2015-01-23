@@ -1,0 +1,75 @@
+<h3>{{ season.post_title }}</h3>
+
+<style>
+    table.standings tr th {
+        vertical-align: middle;
+        text-align: center; }
+
+    table.standings tr td {
+        vertical-align: middle;
+        text-align: center; }
+    
+
+    table.standings tr td.flag {
+        text-align: center;
+        width: 25px; }
+</style>
+
+{% if season.reset %}
+<table class="uk-table standings">
+    <thead>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Events Played</td>
+            <td>Wins</td>
+            <td>Top 2</td>
+            <td>Points</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for players in season.get_standings() %}
+            {% if players.events > 0 %}
+            <tr>   
+                <td>{{ players.playoff_position }}</td>
+                <td>{{ players.name }}</td>
+                <td>{{ players.events }}</td>
+                <td>{{ players.wins }}</td>
+                <td>{{ players.top2 }}</td>
+                <td>{{ players.playoff_points }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+
+<table class="uk-table standings">
+    <thead>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Events Played</td>
+            <td>Wins</td>
+            <td>Top 2</td>
+            <td>Points</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for players in season.get_standings() %}
+            {% if players.events > 0 %}
+            <tr>   
+                <td>{{ players.position }}</td>
+                <td>{{ players.name }}</td>
+                <td>{{ players.events }}</td>
+                <td>{{ players.wins }}</td>
+                <td>{{ players.top2 }}</td>
+                <td>{{ players.points }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}

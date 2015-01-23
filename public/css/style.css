@@ -1,0 +1,87 @@
+	@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700);
+
+	body {
+		font-weight: 300;
+        font-family:'Roboto Condensed',sans-serif;
+        background: url('/img/bg.png') no-repeat;
+		background-size: cover; }
+
+    h1, h2, h3, h4, h5, h6, a {
+        text-transform: uppercase;
+        color: #005391;
+        font-weight: 400;
+        font-family:'Roboto Condensed',sans-serif;   }
+
+    .button {
+        text-decoration: none;
+        display: inline-block;
+        padding: 5px 10px;
+        background : #005391;
+        border: 1px #005391 solid;
+        color: #fff; }
+
+    .button:hover, .button.active {
+        background : #fff;
+        text-decoration: none;
+        color: #005391; }
+
+    .logo {
+        text-align: left; }
+
+    .logo img {
+        width: 75%; }
+
+    .social {
+        text-align: center; }
+
+    .social a {
+        margin: 10px;
+        text-decoration: none;
+        color: #ffffff; }
+
+    .social a:hover {
+        color: #c01713; }
+
+    .page-content {
+        padding: 20px;
+        background: #ffffff; }
+
+    .sponsors {
+        height: 100px;
+        background: #d8d8d8; }
+
+    .copyright {
+        color: #000000; }
+
+
+        table.uk-table thead tr td {
+            text-transform: uppercase;
+            vertical-align: middle;
+            border: none;
+            font-weight: 700;
+            font-size: 12px;
+            background:linear-gradient(to bottom,#005391 0,#004987  100%);
+              filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#005391',endColorstr='#004987 ',GradientType=0);
+            color: #fff;
+            padding: 5px 10px; }
+
+        table.uk-table tr td {
+            font-weight: 400;
+        }
+
+/* AWARDS */
+
+        table.awards {
+            border-collapse: collapse;
+            width: 100%; }
+
+        table.awards thead tr td {
+            text-transform: uppercase;
+            vertical-align: middle;
+            border: none;
+            font-weight: 700;
+            font-size: 12px;
+            background:linear-gradient(to bottom,#005391 0,#004987  100%);
+              filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#005391',endColorstr='#004987 ',GradientType=0);
+            color: #fff;
+            padding: 5px 10px; }
